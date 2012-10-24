@@ -3,7 +3,8 @@ module RightAws #:nodoc:
     MAJOR = 3  unless defined?(MAJOR)
     MINOR = 0  unless defined?(MINOR)
     TINY  = 4  unless defined?(TINY)
+    PATCH = 1  unless defined?(PATCH)
 
-    STRING = [MAJOR, MINOR, TINY].join('.') unless defined?(STRING)
+    STRING = [MAJOR, MINOR, TINY, PATCH].join('.') unless defined?(STRING)
   end
 end
