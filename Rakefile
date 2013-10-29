@@ -1,8 +1,9 @@
 # -*- ruby -*-
+# Patched by Chef for ruby 1.9.3 - STORM-5450
 
 require 'rubygems'
 require "rake/testtask"
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'rake/clean'
 $: << File.dirname(__FILE__)
 testglobs =     ["test/ts_right_aws.rb"]
@@ -16,20 +17,24 @@ else
 end
 
 begin
-  require 'rcov/rcovtask'
+ gem 'simplecov'
 rescue LoadError => e
-  STDERR.puts("RCov is not available, some rake tasks will not be defined: #{e.message}")
+  STDERR.puts("SimpleCov is not available, some rake tasks will not be defined: #{e.message}")
 else
   desc "Analyze code coverage of the unit tests."
-  Rcov::RcovTask.new do |t|
-    t.test_files = FileList[testglobs]
+#  Rcov::RcovTask.new do |t|
+#  Simplecov::SimplecovTask.new do |t|
+#    t.test_files = FileList[testglobs]
     #t.verbose = true     # uncomment to see the executed command
-  end
+#  end
 end
 
 # == Gem == #
 
-gemtask = Rake::GemPackageTask.new(Gem::Specification.load("right_aws.gemspec")) do |package|
+
+spec = Gem::Specification.load("right_aws.gemspec")
+
+gemtask = Rake::PackageTask.new(spec.name, spec.version) do |package|
   package.package_dir = ENV['PACKAGE_DIR'] || 'pkg'
   package.need_zip = true
   package.need_tar = true
